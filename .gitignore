@@ -1,0 +1,51 @@
+# Build artifacts
+*.o
+*.obj
+*.exe
+sim
+sim.exe
+*.a
+*.so
+*.dylib
+
+# CMake build directories
+cmake-build-debug/
+cmake-build-release/
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+!CMakeLists.txt
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Large trace files (uncomment if you don't want to commit them)
+# *.txt
+# !val_*.txt
+# !README*.txt
+
+# Submission files
+Gradescope*.zip
+*.zip
+!read-trace*.zip
+
+# Temporary files
+a.txt
+*.tmp
+*.log
+
+# Compiled binaries
+*.out
+
