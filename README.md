@@ -84,25 +84,6 @@ The gshare predictor uses M1 bits for indexing and N bits for the branch history
 - `N`: Number of bits in the branch history register
 - `trace_file`: Path to the branch trace file
 
-### Hybrid Predictor
-
-The hybrid predictor combines bimodal and gshare predictors using a chooser table.
-
-```bash
-./sim hybrid <K> <M1> <N> <M2> <trace_file>
-```
-
-**Example:**
-```bash
-./sim hybrid 8 14 10 5 gcc_trace.txt
-```
-
-- `K`: Number of bits for chooser table indexing (chooser table size = 2^K)
-- `M1`: Number of bits for gshare predictor indexing
-- `N`: Number of bits in the branch history register for gshare
-- `M2`: Number of bits for bimodal predictor indexing
-- `trace_file`: Path to the branch trace file
-
 ## Trace File Format
 
 Trace files contain branch instructions in the following format:
@@ -133,7 +114,6 @@ The simulator outputs:
 3. **FINAL [PREDICTOR] CONTENTS**: Complete predictor table state
    - Each line shows: `<index> <counter_value>`
    - Counter values range from 0-3 (2-bit saturating counter)
-   - For hybrid predictor: Shows chooser table contents
 
 **Example Output (Bimodal):**
 ```
@@ -165,21 +145,6 @@ FINAL GSHARE CONTENTS
 ...
 ```
 
-**Example Output (Hybrid):**
-```
-COMMAND
-./sim hybrid 8 14 10 5 gcc_trace.txt
-OUTPUT
-number of predictions:    2000000
-number of mispredictions: 207922
-misprediction rate:       10.40%
-FINAL CHOOSER CONTENTS
-0	3
-1	2
-2	2
-...
-```
-
 ## Algorithm Details
 
 ### Bimodal Predictor
@@ -198,15 +163,6 @@ FINAL CHOOSER CONTENTS
   - Not taken: BHR = BHR >> 1
 - Uses same 2-bit saturating counter mechanism as bimodal
 
-### Hybrid Predictor
-- Combines both bimodal and gshare predictors
-- Uses a chooser table (2^K entries) to select which predictor to use
-- Chooser table entries are 2-bit saturating counters:
-  - States 0-1: Prefer bimodal predictor
-  - States 2-3: Prefer gshare predictor
-- Chooser is updated based on which predictor was correct
-- Provides better accuracy by leveraging strengths of both predictors
-
 ## Testing
 
 The project includes validation trace files:
@@ -217,7 +173,6 @@ The project includes validation trace files:
 Validation outputs are provided for comparison:
 - `val_bimodal_*.txt` - Bimodal predictor validation outputs
 - `val_gshare_*.txt` - Gshare predictor validation outputs
-- `val_hybrid_*.txt` - Hybrid predictor validation outputs
 
 To verify your implementation matches expected outputs:
 ```bash
@@ -244,7 +199,6 @@ diff output.txt val_bimodal_1.txt
 Typical misprediction rates on provided traces:
 - **Bimodal (M2=6)**: ~31% on gcc_trace.txt
 - **Gshare (M1=9, N=3)**: ~22% on gcc_trace.txt
-- **Hybrid (K=8, M1=14, N=10, M2=5)**: ~10% on gcc_trace.txt
 
 ## License
 
